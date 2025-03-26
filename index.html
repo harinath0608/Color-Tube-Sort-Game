@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COLOR TUBE SORT GAME </title>
+    <style>
+        *{box-sizing:border-box}
+          body{font-family:'Arial',sans-serif;background-color:#f0f0f0;margin:0;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;color:#333;overflow:hidden}
+          .intro-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#3498db,#2c3e50);display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;z-index:1000;transition:opacity 1s ease-out;text-align:center;padding:20px}
+          .intro-logo{width:120px;height:120px;background-color:#fff;border-radius:30px;margin-bottom:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.2);animation:pulse 2s infinite}
+          @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+          .intro-logo img{width:80%;height:80%;object-fit:contain}
+          .intro-title{font-size:3.5rem;margin-bottom:15px;text-shadow:2px 2px 4px rgba(0,0,0,.3);animation:fadeIn 1.5s ease-in;font-weight:800;background:linear-gradient(to right,#fff,#f1c40f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+          .intro-description{font-size:1.3rem;max-width:700px;text-align:center;line-height:1.6;opacity:0;animation:fadeIn 2s ease-in 1s forwards;margin-bottom:30px}.intro-footer{position:absolute;bottom:30px;font-size:.9rem;opacity:.8;animation:fadeIn 2s ease-in 2s forwards;opacity:0}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+          .game-content{display:none;width:100%;max-width:900px;margin:0 auto;padding:20px}
+          .game-header{text-align:center;margin-bottom:20px}
+          .game-title{color:#2c3e50;text-shadow:1px 1px 2px rgba(0,0,0,.1);font-size:2.5rem;margin-bottom:10px}
+          .game-container{background-color:#fff;border-radius:15px;box-shadow:0 8px 20px rgba(0,0,0,.1);padding:25px;margin-bottom:20px;width:100%}
+          .tubes-container{display:flex;justify-content:center;flex-wrap:wrap;margin-bottom:20px;min-height:300px;gap:15px}
+          .tube{width:65px;height:220px;margin:5px;border-radius:5px 5px 30px 30px;background-color:rgba(0,0,0,.1);position:relative;display:flex;flex-direction:column-reverse;align-items:center;cursor:pointer;transition:transform .2s;border:2px solid rgba(255,255,255,.5)}
+          .tube:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}.block{width:55px;height:55px;border-radius:8px;margin-bottom:5px;cursor:grab;transition:transform .2s;position:relative;z-index:1;background-size:cover;background-position:center;box-shadow:0 3px 5px rgba(0,0,0,.2)}
+          .block:active{cursor:grabbing}.selected{transform:translateY(-20px);box-shadow:0 0 15px rgba(0,0,0,.4)}.controls{display:flex;justify-content:center;gap:20px;width:100%;margin-top:20px}
+          button{background-color:#3498db;color:#fff;border:none;padding:12px 25px;border-radius:8px;cursor:pointer;font-size:16px;transition:all .3s;min-width:150px;font-weight:700;box-shadow:0 4px 8px rgba(0,0,0,.1)}
+          button:hover{background-color:#2980b9;transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.15)}
+          .level-info{font-size:1.2rem;font-weight:700;color:#2c3e50;margin-bottom:15px;text-align:center}
+          .message{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background-color:rgba(46,204,113,.95);color:#fff;padding:25px 50px;border-radius:15px;font-size:26px;font-weight:700;box-shadow:0 8px 25px rgba(0,0,0,.2);z-index:100;display:none;text-align:center;animation:messageFadeIn .5s ease-out}@keyframes messageFadeIn{from{opacity:0;transform:translate(-50%,-40%)}to{opacity:1;transform:translate(-50%,-50%)}}
+          .complete-effect{position:absolute;width:100%;height:100%;top:0;left:0;background:radial-gradient(circle,rgba(255,255,255,.8) 0,rgba(255,255,255,0) 70%);z-index:5;opacity:0;pointer-events:none}
+          @media (max-width:768px){.intro-title{font-size:2.2rem}
+          .intro-description{font-size:1.1rem;max-width:90%}
+          .tube{width:50px;height:180px}.block{width:45px;height:45px}
+          .controls{flex-direction:column;align-items:center}
+          button{width:100%;max-width:200px}}
+    </style>
+</head>
+<body>
+    <div class="intro-screen" id="intro-screen">
+        <div class="intro-logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L3 7L12 12L21 7L12 2Z" fill="#3498db"/>
+                <path d="M3 11L12 16L21 11" stroke="#3498db" stroke-width="2"/>
+                <path d="M3 15L12 20L21 15" stroke="#3498db" stroke-width="2"/>
+            </svg>
+        </div>
+        <h1 class="intro-title">COLOR TUBE SORT</h1>
+        <p class="intro-description">
+            Sort the colorful blocks into matching tubes!<br>
+            Challenge your puzzle skills with increasingly difficult levels.<br>
+            Match all colors in a tube to complete each level.
+        </p>
+        <div class="intro-footer">Loading game...</div>
+    </div>
+    
+    <div class="game-content" id="game-content">
+        <div class="game-header">
+            <h1 class="game-title">COLOR TUBE SORT</h1>
+            <div class="level-info">Level: <span id="level">1</span></div>
+        </div>
+        
+        <div class="game-container">
+            <div class="tubes-container" id="tubes-container"></div>
+        </div>
+        
+        <div class="controls">
+            <button id="reset-btn">Reset Level</button>
+            <button id="new-game-btn">New Game</button>
+        </div>
+        
+        <div class="message" id="message">Level Complete!</div>
+    </div>
+    
+    <audio id="complete-sound" preload="auto">
+        <source src="./sounds/Level Complete Sound 03.wav" type="audio/mpeg">
+    </audio>
+    <audio id="move-sound" preload="auto">
+        <source src="./sounds/Game Crate Move Sound 1.wav" type="audio/mpeg">
+    </audio>
+    <audio id="block-move-sound" preload="auto">
+        <source src="./sounds/Game Crate Move Sound 1.wav" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // Game configuration
+        const config = {
+            initialTubes: 4,
+            initialImages: 5,
+            maxBlocksPerTube: 4,
+            images: [
+                'images/block1.png',
+                'images/block2.png',
+                'images/block3.png',
+                'images/block4.png',
+                'images/block5.png'
+            ],
+            playStoreLink: 'https://play.google.com/store/apps/details?id=com.kds.balls.sort.puzzles&hl=en_IN'
+        };
+        
+        // Game state
+        const gameState = {
+            level: 1,
+            tubes: [],
+            selectedTube: null,
+            moves: 0,
+            soundsEnabled: true
+        };
+        
+        // DOM elements
+        const dom = {
+            introScreen: document.getElementById('intro-screen'),
+            gameContent: document.getElementById('game-content'),
+            tubesContainer: document.getElementById('tubes-container'),
+            levelDisplay: document.getElementById('level'),
+            resetBtn: document.getElementById('reset-btn'),
+            newGameBtn: document.getElementById('new-game-btn'),
+            message: document.getElementById('message'),
+            completeSound: document.getElementById('complete-sound'),
+            moveSound: document.getElementById('move-sound'),
+            blockMoveSound: document.getElementById('block-move-sound')
+        };
+        
+        // Timer variables
+        let currentTime = 0;
+        let videoTimer;
+        
+        // Utility functions
+        const utils = {
+            shuffleArray: array => {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            },
+            playSound: sound => {
+                if (!gameState.soundsEnabled) return;
+                try {
+                    sound.currentTime = 0;
+                    sound.play().catch(e => console.log("Sound play error:", e));
+                } catch (e) {
+                    console.log("Sound error:", e);
+                }
+            },
+            showMessage: text => {
+                dom.message.textContent = text;
+                dom.message.style.display = 'block';
+                setTimeout(() => {
+                    dom.message.style.display = 'none';
+                }, 1000);
+            }
+        };
+        
+        // Game functions
+        const game = {
+            init: () => {
+                gameState.level = 1;
+                game.setupLevel();
+                game.startVideoSequence();
+                
+                document.addEventListener('click', function enableSounds() {
+                    gameState.soundsEnabled = true;
+                    const silentSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...');
+                    silentSound.play().then(() => silentSound.remove());
+                    document.removeEventListener('click', enableSounds);
+                }, { once: true });
+            },
+            
+            startVideoSequence: () => {
+                videoTimer = setInterval(() => {
+                    currentTime++;
+                    
+                    if (currentTime === 10) {
+                        dom.introScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            dom.introScreen.style.display = 'none';
+                            dom.gameContent.style.display = 'block';
+                        }, 1000);
+                    }
+                    
+                    if (currentTime === 26) {
+                        utils.showMessage("Redirecting to Play Store...");
+                    }
+                    
+                    if (currentTime === 30) {
+                        clearInterval(videoTimer);
+                        window.location.href = config.playStoreLink;
+                    }
+                }, 1000);
+            },
+            
+            setupLevel: () => {
+                gameState.tubes = [];
+                gameState.selectedTube = null;
+                gameState.moves = 0;
+                
+                dom.tubesContainer.innerHTML = '';
+                dom.levelDisplay.textContent = gameState.level;
+                
+                const numImages = Math.min(config.initialImages + Math.floor(gameState.level / 2), config.images.length);
+                const numTubes = config.initialTubes + Math.floor(gameState.level / 3);
+                
+                const imagePool = [];
+                
+                for (let i = 0; i < numImages; i++) {
+                    for (let j = 0; j < config.maxBlocksPerTube; j++) {
+                        imagePool.push(i);
+                    }
+                }
+                
+                utils.shuffleArray(imagePool);
+                
+                const blocksPerTube = Math.floor(imagePool.length / (numTubes - 1));
+                const extraBlocks = imagePool.length % (numTubes - 1);
+                
+                for (let i = 0; i < numTubes - 1; i++) {
+                    const tubeBlocks = [];
+                    const blocksToAdd = i < extraBlocks ? blocksPerTube + 1 : blocksPerTube;
+                    
+                    for (let j = 0; j < blocksToAdd; j++) {
+                        tubeBlocks.push(imagePool.pop());
+                    }
+                    
+                    gameState.tubes.push(tubeBlocks);
+                }
+                
+                // Add empty tubes
+                gameState.tubes.push([], [], [], []);
+                
+                game.renderTubes();
+            },
+            
+            renderTubes: () => {
+                dom.tubesContainer.innerHTML = '';
+                
+                gameState.tubes.forEach((tubeBlocks, tubeIndex) => {
+                    const tubeElement = document.createElement('div');
+                    tubeElement.className = 'tube';
+                    tubeElement.dataset.index = tubeIndex;
+                    
+                    tubeBlocks.forEach(imageIndex => {
+                        const blockElement = document.createElement('div');
+                        blockElement.className = 'block';
+                        blockElement.style.backgroundImage = `url('${config.images[imageIndex]}')`;
+                        blockElement.dataset.image = imageIndex;
+                        tubeElement.appendChild(blockElement);
+                    });
+                    
+                    tubeElement.addEventListener('click', () => game.handleTubeClick(tubeIndex));
+                    dom.tubesContainer.appendChild(tubeElement);
+                });
+            },
+            
+            handleTubeClick: tubeIndex => {
+                const tube = gameState.tubes[tubeIndex];
+                
+                if (gameState.selectedTube === null) {
+                    if (tube.length > 0) {
+                        gameState.selectedTube = tubeIndex;
+                        game.highlightTube(tubeIndex, true);
+                        utils.playSound(dom.moveSound);
+                    }
+                } else if (gameState.selectedTube === tubeIndex) {
+                    gameState.selectedTube = null;
+                    game.highlightTube(tubeIndex, false);
+                } else {
+                    const sourceTube = gameState.tubes[gameState.selectedTube];
+                    const sourceImage = sourceTube[sourceTube.length - 1];
+                    
+                    if (tube.length === 0 || tube[tube.length - 1] === sourceImage) {
+                        utils.playSound(dom.blockMoveSound);
+                        
+                        const movedBlock = sourceTube.pop();
+                        tube.push(movedBlock);
+                        gameState.moves++;
+                        
+                        if (tube.length === config.maxBlocksPerTube && tube.every(img => img === tube[0])) {
+                            const tubeElements = document.querySelectorAll('.tube');
+                            game.addCompletionEffect(tubeElements[tubeIndex]);
+                            utils.playSound(dom.completeSound);
+                        }
+                        
+                        if (game.checkLevelComplete()) {
+                            utils.showMessage("Level Complete!");
+                            setTimeout(() => {
+                                gameState.level++;
+                                game.setupLevel();
+                            }, 1500);
+                        }
+                    }
+                    
+                    game.highlightTube(gameState.selectedTube, false);
+                    gameState.selectedTube = null;
+                    game.renderTubes();
+                }
+            },
+            
+            highlightTube: (tubeIndex, highlight) => {
+                const tubeElements = document.querySelectorAll('.tube');
+                if (tubeIndex >= 0 && tubeIndex < tubeElements.length) {
+                    const blocks = tubeElements[tubeIndex].querySelectorAll('.block');
+                    if (blocks.length > 0) {
+                        const topBlock = blocks[blocks.length - 1];
+                        topBlock.classList.toggle('selected', highlight);
+                    }
+                }
+            },
+            
+            checkLevelComplete: () => {
+                return gameState.tubes.every(tube => {
+                    if (tube.length === 0) return true;
+                    if (tube.length !== config.maxBlocksPerTube) return false;
+                    return tube.every(image => image === tube[0]);
+                });
+            },
+            
+            addCompletionEffect: tubeElement => {
+                const effect = document.createElement('div');
+                effect.className = 'complete-effect';
+                tubeElement.appendChild(effect);
+                
+                setTimeout(() => {
+                    effect.style.opacity = '1';
+                    effect.style.transition = 'opacity 0.5s ease-out';
+                }, 10);
+                
+                setTimeout(() => {
+                    effect.style.opacity = '0';
+                    setTimeout(() => {
+                        tubeElement.removeChild(effect);
+                    }, 500);
+                }, 1000);
+            }
+        };
+        
+        // Event listeners
+        dom.resetBtn.addEventListener('click', () => {
+            game.setupLevel();
+            utils.playSound(dom.moveSound);
+        });
+        
+        dom.newGameBtn.addEventListener('click', () => {
+            gameState.level = 1;
+            game.setupLevel();
+            utils.playSound(dom.moveSound);
+        });
+        
+        window.addEventListener('load', game.init);
+
+    </script>
+    
+</body>
+</html>
