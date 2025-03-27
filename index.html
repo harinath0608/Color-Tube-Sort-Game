@@ -2,227 +2,326 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COLOR TUBE SORT GAME </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>COLOR TUBE SORT GAME</title>
     <style>
-        *{box-sizing:border-box}
+        * {box-sizing: border-box;}
 
-          body   {
-          font-family:'Arial',sans-serif;
-          background-color:#3498db;
-          margin:0;
-          padding:0;
-          display:flex;
-          flex-direction:column;
-          align-items:center;
-          justify-content:center;
-          min-height:100vh;
-          color:#333;
-          overflow:hidden
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #3498db;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            overflow-x: hidden;
+            height: auto;
         }
-          .intro-screen {
-            position:fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            background:linear-gradient(135deg,#3498db,#2c3e50);
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            color:#fff;
-            z-index:1000;
-            transition:opacity 1s ease-out;
-            text-align:center;
-            padding:20px
-        }
-          .intro-logo {
-            width:120px;
-            height:120px;
-            background-color:#fff;
-            border-radius:30px;
-            margin-bottom:30px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            box-shadow:0 10px 30px rgba(0,0,0,.2);
-            animation:pulse 2s infinite
-        }
-          @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
-          .intro-logo img {
-            width:80%;
-            height:80%;
-            object-fit:contain
-        }
-          .intro-title {
-            font-size:3.5rem;
-            margin-bottom:15px;
-            text-shadow:2px 2px 4px rgba(0,0,0,.3);
-            animation:fadeIn 1.5s ease-in;
-            font-weight:800;
-            background:linear-gradient(to right,#fff,#ffffff);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent
-        }
-          .intro-description {
-            font-size:1.3rem;
-            max-width:700px;
-            text-align:center;
-            line-height:1.6;
-            opacity:0;
-            animation:fadeIn 2s ease-in 1s forwards;
-            margin-bottom:30px
-        }
-          .intro-footer {
-            position:absolute;
-            bottom:30px;
-            font-size:.9rem;
-            opacity:.8;
-            animation:fadeIn 2s ease-in 2s forwards;
-            opacity:0
-        }
-        @keyframes fadeIn { from {opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-          .game-content {
-            display:none;
-            width:100%;
-            max-width:900px;
-            margin:0 auto;
-            padding:20px
-        }
-          .game-header { 
-            text-align:center;
-            margin-bottom:20px}
-          .game-title {
-            color:#fff;
-            text-shadow:1px 1px 2px rgba(0,0,0,.1);
-            font-size:2.5rem;
-            margin-bottom:10px}
-          .game-container { 
-            background-color:#fff;
-            border-radius:15px;
-            box-shadow:0 8px 20px rgba(0,0,0,.1);
-            padding:25px;
-            margin-bottom:20px;
-            width:100%
-        }
-          .tubes-container { 
-            display:flex;
-            justify-content:center;
-            flex-wrap:wrap;
-            margin-bottom:20px;
-            min-height:300px;
-            gap:15px}
-          .tube { 
-            width:65px;
-            height:280px;
-            margin:5px;
-            border-radius:5px 5px 30px 30px;
-            background-color:rgba(0,0,0,.1);
-            position:relative;
-            display:flex;
-            flex-direction:column-reverse;
-            align-items:center;
-            cursor:pointer;
-            transition:transform .2s;
-            border:2px solid rgba(255,255,255,.5)
-        }
-          .tube:hover {
-            transform:translateY(-5px);
-            box-shadow:0 5px 15px rgba(0,0,0,.1)
-        }
-        .block {
-            width:55px;
-            height:55px;
-            border-radius:8px;
-            margin-bottom:5px;
-            cursor:grab;
-            transition:transform .2s;
-            position:relative;
-            z-index:1;
-            background-size:cover;
-            background-position:center;
-            box-shadow:0 3px 5px rgba(0,0,0,.2)
-        }
-          .block:active{cursor:grabbing}.selected{transform:translateY(-20px);box-shadow:0 0 15px rgba(0,0,0,.4)}
-          .controls {
-            display:flex;
-            justify-content:center;
-            gap:20px;width:100%;
-            margin-top:20px
-        }
-          button {
-            background-color:#fff;
-            color:#3498db;
-            border:none;
-            padding:12px 25px;
-            border-radius:8px;
-            cursor:pointer;
-            font-size:16px;
-            transition:all .3s;
-            min-width:150px;
-            font-weight:700;
-            box-shadow:0 4px 8px rgba(0,0,0,.1)
-        }
-          button:hover {
-            background-color:#2980b9;
+
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             color: #fff;
-            transform:translateY(-2px);
-            box-shadow:0 6px 12px rgba(0,0,0,.15)}
-          .level-info {
-            font-size:1.2rem;
-            font-weight:700;
-            color:#2c3e50;
-            margin-bottom:15px;
-            text-align:center
+            z-index: 1000;
+            transition: opacity 1s ease-out;
+            text-align: center;
+            padding: 20px;
         }
-          .message {
-            position:fixed;
-            top:50%;left:50%;
-            transform:translate(-50%,-50%);
-            background-color:rgba(46,204,113,.95);
-            color:#fff;
-            padding:25px 50px;
-            border-radius:15px;
-            font-size:26px;
-            font-weight:700;
-            box-shadow:0 8px 25px rgba(0,0,0,.2);
-            z-index:100;
-            display:none;
-            text-align:center;
-            animation:messageFadeIn .5s ease-out
+
+        .intro-logo {
+            width: 120px;
+            height: 120px;
+            background-color: #fff;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+            animation: pulse 2s infinite;
         }
-        @keyframes messageFadeIn { from{opacity:0;transform:translate(-50%,-40%)}to{opacity:1;transform:translate(-50%,-50%)}}
-          .complete-effect {
-            position:absolute;
-            width:100%;
-            height:100%;
-            top:0;left:0;
-            background:radial-gradient(circle,rgba(255,255,255,.8) 0,rgba(255,255,255,0) 70%);
-            z-index:5;
-            opacity:0;
-            pointer-events:none}
-          @media (max-width:768px) {
-            .intro-title {font-size:2.2rem}
-          .intro-description {
-            font-size:1.1rem;
-            max-width:90%
+
+        @keyframes pulse {
+            0% {transform: scale(1);}
+            50% {transform: scale(1.05);}
+            100% {transform: scale(1);}
         }
-          .tube {
-            width:50px;
-            height:180px
-        }.block {
-            width:45px;
-            height:45px
+
+        .intro-logo img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
         }
-          .controls{
-            flex-direction:column;
-            align-items:center
+
+        .intro-title {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,.3);
+            animation: fadeIn 1.5s ease-in;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-          button {
-            width:100%;
-            max-width:200px
+
+        .intro-description {
+            font-size: 1.3rem;
+            max-width: 700px;
+            text-align: center;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 2s ease-in 1s forwards;
+            margin-bottom: 30px;
         }
+
+        .intro-footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: .9rem;
+            opacity: .8;
+            animation: fadeIn 2s ease-in 2s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .game-content {
+            display: none;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .game-header { 
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,.1);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .game-container { 
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.1);
+            padding: 20px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .tubes-container { 
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            min-height: 250px;
+            gap: 10px;
+            padding: 5px;
+        }
+
+        .tube { 
+            width: 65px;
+            height: 250px;
+            margin: 3px;
+            border-radius: 5px 5px 30px 30px;
+            background-color: rgba(0,0,0,.1);
+            position: relative;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            cursor: pointer;
+            transition: transform .2s;
+            border: 2px solid rgba(255,255,255,.5);
+        }
+
+        .tube:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,.1);
+        }
+
+        .block {
+            width: 55px;
+            height: 55px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: grab;
+            transition: transform .2s;
+            position: relative;
+            z-index: 1;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 3px 5px rgba(0,0,0,.2);
+        }
+
+        .block:active {cursor: grabbing;}
+        .selected {transform: translateY(-20px); box-shadow: 0 0 15px rgba(0,0,0,.4);}
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            margin-top: 15px;
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: #fff;
+            color: #3498db;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all .3s;
+            min-width: 150px;
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(0,0,0,.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,.15);
+        }
+
+        .level-info {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            background-color: rgba(46,204,113,.95);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(0,0,0,.2);
+            z-index: 100;
+            display: none;
+            text-align: center;
+            animation: messageFadeIn .5s ease-out;
+        }
+
+        @keyframes messageFadeIn {
+            from {opacity: 0; transform: translate(-50%,-40%);}
+            to {opacity: 1; transform: translate(-50%,-50%);}
+        }
+
+        .complete-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, rgba(255,255,255,.8) 0, rgba(255,255,255,0) 70%);
+            z-index: 5;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .intro-title {font-size: 2.2rem;}
+            
+            .intro-description {
+                font-size: 1.1rem;
+                max-width: 90%;
+            }
+            
+            .tube {
+                width: 45px;
+                height: 180px;
+            }
+            
+            .block {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .tubes-container {
+                min-height: 200px;
+                gap: 8px;
+            }
+            
+            .game-container {
+                padding: 15px;
+            }
+            
+            .game-title {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 250px;
+                padding: 10px 20px;
+            }
+            
+            .message {
+                padding: 15px 30px;
+                font-size: 18px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tube {
+                width: 40px;
+                height: 160px;
+            }
+            
+            .block {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .controls button {
+                max-width: none;
+                width: 90%;
+            }
+            
+            .game-title {
+                font-size: 1.5rem;
+            }
+            
+            .level-info {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -536,8 +635,6 @@
         });
         
         window.addEventListener('load', game.init);
-
     </script>
-    
 </body>
 </html>
